@@ -1,0 +1,10 @@
+# Ignore all node_modules folders
+**/node_modules
+
+# Ignore Next.js build folder
+/frontend/.next/
+
+# Ignore .env files (where we will store secrets)
+.env
+.env*.local
+/backend/.env
