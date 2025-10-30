@@ -45,7 +45,7 @@ async function fetchAndSaveData() {
       }
 
       // 3a. Find the district_id from our 'Districts' table
-      const distQuery = 'SELECT id FROM Districts WHERE district_name_en = $1';
+      const distQuery = 'SELECT id FROM Districts WHERE district_name_en ILIKE $1';
       const distRes = await client.query(distQuery, [record.district_name]);
 
       if (distRes.rows.length === 0) {
