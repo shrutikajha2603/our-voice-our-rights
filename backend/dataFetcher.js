@@ -1,5 +1,4 @@
 const { Pool } = require('pg');
-const fetch = require('node-fetch'); // Make sure to `npm install node-fetch`
 
 // We get this from the environment variable we set on Render
 const API_KEY = process.env.DATA_GOV_API_KEY;
