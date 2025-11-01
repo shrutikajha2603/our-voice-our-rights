@@ -71,7 +71,10 @@ app.get('/api/districts', async (req, res) => {
  * @desc    Get latest (and previous) performance data for a specific district
  */
 app.get('/api/performance/:district_id', async (req, res) => {
-  const { district_id } = req.params;
+  const district_id = parseInt(req.params.district_id, 10);
+  if (isNaN(district_id)) {
+    return res.status(400).json({ msg: 'District ID must be a number.' });
+  }
   const cacheKey = `performance:${district_id}`;
 
   try {
