@@ -1,10 +1,11 @@
 // --- Dependencies ---
 const express = require('express');
-const { Pool } = require('pg');        // PostgreSQL client
-const { createClient } = require('redis'); // Redis client
-const cors = require('cors');          // To allow frontend to call the API
-const cron = require('node-cron');     // To schedule the data fetcher
-const { fetchAndSaveData } = require('./dataFetcher'); // Import the fetcher logic
+const { Pool } = require('pg');        
+const { createClient } = require('redis'); 
+const cors = require('cors');          
+const cron = require('node-cron');     
+const { fetchAndSaveData } = require('./dataFetcher'); 
+const { setupDatabase } = require('./setupDatabase');
 
 // --- Configuration ---
 const app = express();
@@ -145,6 +146,24 @@ app.get('/api/location/district', async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+
+// --- TEMPORARY DEBUG ROUTE ---
+// We will use this to run the fetcher and see its logs.
+app.get('/api/run-fetcher-now', async (req, res) => {
+  console.log("--- MANUAL DATA FETCH TRIGGERED ---");
+  try {
+    // Run the function
+    await fetchAndSaveData();
+    
+    console.log("--- MANUAL DATA FETCH FINISHED ---");
+    res.status(200).json({ message: "Data fetch completed. Check the Render logs for details." });
+
+  } catch (err) {
+    console.error("--- MANUAL DATA FETCH FAILED ---", err);
+    res.status(500).json({ message: "Data fetch failed. Check the Render logs for the error." });
+  }
+});
+// --- END OF TEMPORARY ROUTE ---
 
 // --- Scheduled Job ---
 // This won't run on the "Free" web service, but we'll add it anyway.
