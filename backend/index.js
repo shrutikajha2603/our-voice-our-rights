@@ -78,16 +78,15 @@ app.get('/api/performance/:district_id', async (req, res) => {
   const cacheKey = `performance:${district_id}`;
 
   try {
-    // 1. Check the Redis Cache first
-    const cachedData = await redisClient.get(cacheKey);
-    if (cachedData) {
-      console.log(`CACHE HIT for district: ${district_id}`);
-      return res.json(JSON.parse(cachedData));
-    }
-
-    console.log(`CACHE MISS for district: ${district_id}`);
+    // --- STEP 1: REDIS (Keep this commented out) ---
+    // const cachedData = await redisClient.get(cacheKey);
+    // if (cachedData) {
+    //   console.log(`CACHE HIT for district: ${district_id}`);
+    //   return res.json(JSON.parse(cachedData));
+    // }
+    // console.log(`CACHE MISS for district: ${district_id}`);
     
-    // 2. If not in cache, query the PostgreSQL database
+    // --- STEP 2: DATABASE (This part MUST be active) ---
     const query = `
       SELECT * FROM monthlyperformance
       WHERE district_id = $1
@@ -100,16 +99,16 @@ app.get('/api/performance/:district_id', async (req, res) => {
       return res.status(404).json({ msg: 'No performance data found for this district.' });
     }
 
-    // 3. Format the data for the frontend
+    // --- STEP 3: FORMATTING (This part MUST be active) ---
     const formattedData = {
       current_month: result.rows[0] || null,
       previous_month: result.rows[1] || null,
     };
 
-    // 4. Store the result in Redis for 24 hours (86400 seconds)
-    await redisClient.set(cacheKey, JSON.stringify(formattedData), {
-      EX: 86400, 
-    });
+    // --- STEP 4: REDIS (Keep this commented out) ---
+    // await redisClient.set(cacheKey, JSON.stringify(formattedData), {
+    //   EX: 86400, 
+    // });
 
     res.json(formattedData);
   } catch (err) {
