@@ -66,7 +66,7 @@ async function fetchAndSaveData() {
 
       // 3c. Insert or Update data using "ON CONFLICT"
       const upsertQuery = `
-        INSERT INTO MonthlyPerformance (
+        INSERT INTO monthlyperformance (
           district_id, financial_year, month, 
           job_cards_issued, active_workers, person_days_generated, 
           households_100_days, wage_liabilities_pending_rs

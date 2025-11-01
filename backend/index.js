@@ -85,7 +85,7 @@ app.get('/api/performance/:district_id', async (req, res) => {
     
     // 2. If not in cache, query the PostgreSQL database
     const query = `
-      SELECT * FROM MonthlyPerformance
+      SELECT * FROM monthlyperformance
       WHERE district_id = $1
       ORDER BY financial_year DESC, month DESC
       LIMIT 2; 
