@@ -165,6 +165,23 @@ app.get('/api/run-fetcher-now', async (req, res) => {
 });
 // --- END OF TEMPORARY ROUTE ---
 
+// --- TEMPORARY ROUTE TO SET UP THE DATABASE ---
+app.get('/api/run-setup-now', async (req, res) => {
+  console.log("--- MANUAL DATABASE SETUP TRIGGERED ---");
+  try {
+    // Run the setup function
+    await setupDatabase();
+
+    console.log("--- DATABASE SETUP FINISHED ---");
+    res.status(200).json({ message: "Database setup completed. Check the Render logs for details." });
+
+  } catch (err) {
+    console.error("--- DATABASE SETUP FAILED ---", err);
+    res.status(500).json({ message: "Database setup failed. Check the Render logs for the error." });
+  }
+});
+// --- END OF TEMPORARY ROUTE ---
+
 // --- Scheduled Job ---
 // This won't run on the "Free" web service, but we'll add it anyway.
 // We will trigger the data fetcher manually.
